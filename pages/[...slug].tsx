@@ -12,81 +12,257 @@ const vinylData = [
     artist: "Lorde",
     albumName: "Solar Power",
     coverHref: "/solar-power.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/solar-power.jpeg"
+        blurDataURL="/solar-power.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "Frank Ocean",
     albumName: "Blonde",
     coverHref: "/blonde.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/blonde.jpeg"
+        blurDataURL="/blonde.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "Twenty One Pilots",
     albumName: "Trench",
     coverHref: "/trench.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/trench.jpeg"
+        blurDataURL="/trench.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "Arctic Monkeys",
     albumName: "AM",
     coverHref: "/am.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/am.jpeg"
+        blurDataURL="/am.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "Kendrick Lamar",
     albumName: "Good Kid M.a.a.D. City",
     coverHref: "/gkmc.png",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/gkmc.png"
+        blurDataURL="/gkmc.png"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "Taylor Swift",
     albumName: "Midnights",
     coverHref: "/midnights.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/midnights.jpeg"
+        blurDataURL="/midnights.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "Kendrick Lamar",
     albumName: "Untitled Unmastered",
     coverHref: "/untitled-unmastered.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/untitled-unmastered.jpeg"
+        blurDataURL="/untitled-unmastered.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "Kendrick Lamar",
     albumName: "DAMN",
     coverHref: "/damn.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/damn.jpeg"
+        blurDataURL="/damn.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "Kendrick Lamar",
     albumName: "Mr. Morale & the Big Steppers",
     coverHref: "/mr-morale.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/mr-morale.jpeg"
+        blurDataURL="/mr-morale.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "Kendrick Lamar",
     albumName: "To Pimp a Butterfly",
     coverHref: "/tpab.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/tpab.jpeg"
+        blurDataURL="/tpab.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "Taylor Swift",
     albumName: "folklore",
     coverHref: "/folklore.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/folklore.jpeg"
+        blurDataURL="/folklore.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "Kanye West",
     albumName: "Donda",
     coverHref: "/donda.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/donda.jpeg"
+        blurDataURL="/donda.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "Metallica",
     albumName: "Master Of Puppets",
     coverHref: "/master-of-puppets.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/master-of-puppets.jpeg"
+        blurDataURL="/master-of-puppets.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "Childish Gambino",
     albumName: "Awaken, My Love!",
     coverHref: "/awaken-my-love.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/awaken-my-love.jpeg"
+        blurDataURL="/awaken-my-love.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "fun.",
     albumName: "SOME NIGHTS",
     coverHref: "/some-nights.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/some-nights.jpeg"
+        blurDataURL="/some-nights.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
   {
     artist: "Taylor Swift",
     albumName: "Evermore",
     coverHref: "/evermore.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/evermore.jpeg"
+        blurDataURL="/evermore.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
   },
 ];
 
@@ -94,6 +270,7 @@ type Vinyl = {
   artist: string;
   albumName: string;
   coverHref: string;
+  Component: () => JSX.Element;
 };
 
 export function randChoice<T>(arr: Array<T>): T {
@@ -106,6 +283,7 @@ export const Home: NextPage = () => {
     artist: "",
     albumName: "",
     coverHref: "",
+    Component: () => <></>,
   });
 
   const getRandomVinyl = () => {
@@ -147,18 +325,12 @@ export const Home: NextPage = () => {
         {vinyl.artist && vinyl.albumName && (
           <>
             <p className="mt-10 text-center text-lg text-gray-500 sm:text-2xl">
-              Vinyl selected:{" "}<br/>
+              Vinyl selected: <br />
               <span className="text-green-500">
                 {vinyl.artist} - {vinyl.albumName}
               </span>
             </p>
-            <img
-              className="mx-auto mt-10 text-center text-lg text-gray-500 sm:text-2xl border-4 border-green-500"
-              src={vinyl.coverHref}
-              alt="vinyl cover"
-              width={280}
-              height={280}
-            />
+            <vinyl.Component />
           </>
         )}
         {loading && (
