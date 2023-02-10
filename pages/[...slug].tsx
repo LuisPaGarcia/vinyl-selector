@@ -273,8 +273,15 @@ type Vinyl = {
   Component: () => JSX.Element;
 };
 
-export function randChoice<T>(arr: Array<T>): T {
-  return arr[Math.floor(Math.random() * arr.length)];
+let tempArr = vinylData.slice();
+function randChoice(arr: Array<Vinyl>) {
+  let index = Math.floor(Math.random() * arr.length);
+  let item = arr[index];
+  arr.splice(index, 1);
+  if (arr.length === 0) {
+    tempArr = vinylData.slice();
+  }
+  return item;
 }
 
 export const Home: NextPage = () => {
@@ -287,7 +294,7 @@ export const Home: NextPage = () => {
   });
 
   const getRandomVinyl = () => {
-    setVinyl(randChoice(vinylData));
+    setVinyl(randChoice(tempArr));
   };
 
   return (
