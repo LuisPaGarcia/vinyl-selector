@@ -264,6 +264,22 @@ const vinylData = [
       />
     ),
   },
+  {
+    artist: "Taylor Swift",
+    albumName: "lover",
+    coverHref: "/lover.jpeg",
+    Component: () => (
+      <Image
+        placeholder="blur"
+        className="mx-auto mt-10 border-4 border-green-500 text-center text-lg text-gray-500 sm:text-2xl"
+        src="/lover.jpeg"
+        blurDataURL="/lover.jpeg"
+        alt="vinyl cover"
+        width={280}
+        height={280}
+      />
+    ),
+  },
 ];
 
 type Vinyl = {
