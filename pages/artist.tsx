@@ -18,7 +18,6 @@ export const Artist: NextPage = () => {
       setDebouncedSearchTerm(artistName);
       setLoading(false);
       if (!artistName) return;
-      toast.success(artistName);
     }, 500);
 
     return () => clearTimeout(getData);
