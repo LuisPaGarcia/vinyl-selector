@@ -316,19 +316,16 @@ export const Home: NextPage = () => {
   return (
     <div className="mx-auto flex min-h-screen max-w-5xl flex-col pt-8 sm:pt-12">
       <Head>
-        <title>Vinyl Selector</title>
+        <title>Vinyl Picker</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
       <main className="mx-auto mt-10 flex max-w-5xl flex-1 flex-col justify-center px-2 sm:mt-40">
-        <a
-          target="_blank"
-          rel="noreferrer"
+        <span
           className="mx-auto mb-5 hidden max-w-fit rounded-full border border-gray-800 px-4 py-1 text-gray-500 transition duration-300 ease-in-out hover:scale-105 hover:border-gray-700 md:block"
-          href="https://twitter.com/nutlope/status/1622988173155368960"
         >
           Press the button and check which vinyl we will play today.
-        </a>
+        </span>
         <h1 className="max-w-5xl text-center text-4xl font-bold sm:text-7xl">
           Press the button and{" "}
           <span className="relative whitespace-nowrap text-[#3290EE]">
