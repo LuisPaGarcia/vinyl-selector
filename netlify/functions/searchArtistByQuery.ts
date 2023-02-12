@@ -19,7 +19,7 @@ const handler: Handler = async (
     };
   }
 
-  const urlServer = `https://musicbrainz.org/ws/2/artist/?query=${query}fmt=json`;
+  const urlServer = `https://musicbrainz.org/ws/2/artist/?query=${query}&fmt=json`;
   const response = await axios.get(urlServer);
   const data = response.data;
 
