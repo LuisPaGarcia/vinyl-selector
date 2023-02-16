@@ -2,6 +2,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:fun": "netlify functions:serve --port 3001",
     "build": "next build",
     "start": "next start",
     "export": "next export"
@@ -29,6 +30,7 @@
     "@types/react": "18.0.21",
     "@types/react-dom": "18.0.6",
     "autoprefixer": "^10.4.12",
+    "netlify-cli": "^12.12.0",
     "postcss": "^8.4.18",
     "prettier": "^2.8.3",
     "prettier-plugin-tailwindcss": "^0.2.2",

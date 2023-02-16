@@ -8,9 +8,45 @@ import Header from "../components/Header";
 import SquigglyLines from "../components/SquigglyLines";
 import axios from "axios";
 
+const artistsReducer = (artists: object[]): Artists[] =>
+  artists.slice(0, 5).map((artist: any) => ({
+    name: artist.name,
+    id: artist.id,
+    disambiguation: artist.disambiguation,
+  }));
+const artistsAlbumsReducer = (artistsAlbums: object[]): ArtistAlbum[] =>
+  artistsAlbums
+    .map((artistsAlbum: any) => ({
+      title: artistsAlbum.title,
+      id: artistsAlbum.id,
+      status: artistsAlbum.status,
+      type: artistsAlbum["primary-type"],
+      disambiguation: artistsAlbum.disambiguation,
+      releaseDate:
+        artistsAlbum["date"].length < 5
+          ? artistsAlbum["date"] + "-01-01"
+          : artistsAlbum["date"],
+    }))
+    .slice()
+    .sort((a, b) => +new Date(b.releaseDate) - +new Date(a.releaseDate));
+
+type Artists = {
+  name: string;
+  id: string;
+  disambiguation: string;
+};
+type ArtistAlbum = {
+  title: string;
+  id: string;
+  disambiguation: string;
+};
+
 export const Artist: NextPage = () => {
   const [artistName, artistNameSet] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [artists, setArtists] = useState<Artists[]>([]);
+  const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
+  const [selectedArtistAlbums, setSelectedArtistAlbums] = useState<any[]>([]);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(artistName);
 
   useEffect(() => {
@@ -18,34 +54,66 @@ export const Artist: NextPage = () => {
       setDebouncedSearchTerm(artistName);
       setLoading(false);
       if (!artistName) return;
-    }, 500);
+    }, 300);
 
     return () => clearTimeout(getData);
   }, [artistName]);
 
   useEffect(() => {
-    if (!debouncedSearchTerm) return;
-    const getData = async () => {
-      await axios
-        .get(
-          "/.netlify/functions/searchArtistByQuery?query=" + debouncedSearchTerm
-        )
-        .then((data) => {
-          console.log(data);
-          toast.success("Success");
-        })
-        .catch((error) => {
-          console.log(error);
-          toast.error("Error", error);
-        });
+    if (!debouncedSearchTerm) {
+      setArtists([]);
+      return;
+    }
+
+    const getData = async (debouncedSearchTerm: string) => {
+      try {
+        setLoading(true);
+        const url = "/.netlify/functions/searchArtistByQuery?query=";
+        const data = await axios.get(url + debouncedSearchTerm);
+        setArtists(artistsReducer(data.data.response.artists));
+        console.log(artists);
+        toast.success("Success");
+      } catch (error) {
+        console.log(error);
+        toast.error("Error");
+      } finally {
+        setLoading(false);
+      }
     };
-    getData();
+    getData(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
+
+  useEffect(() => {
+    if (!selectedArtist) return;
+    const getData = async (selectedArtist: string) => {
+      try {
+        setLoading(true);
+        const url = "/.netlify/functions/getArtistAlbumsById?artist_id=";
+        const data = await axios.get(url + selectedArtist);
+        console.log("data", data)
+        console.log(data.data.response["releases"]);
+        setSelectedArtistAlbums(
+          artistsAlbumsReducer(data.data.response["releases"])
+        );
+      } catch (error) {
+        console.log(error);
+        toast.error("Error");
+      } finally {
+        setLoading(false);
+      }
+    };
+    getData(selectedArtist);
+  }, [selectedArtist]);
 
   const handleChange = (artistName: string) => {
     if (artistName) setLoading(true);
 
     artistNameSet(artistName);
+  };
+
+  const artistSelectedSet = (id: string) => {
+    console.log(id);
+    setSelectedArtist(id);
   };
 
   return (
@@ -94,6 +162,42 @@ export const Artist: NextPage = () => {
           reverseOrder={false}
           toastOptions={{ duration: 2000 }}
         />
+
+        {artists.length > 0 && (
+          <div className="rounded-lg shadow-md">
+            <table className="mx-auto mt-10 w-full rounded-lg border border-gray-500 bg-black p-3 text-left text-sm outline-1 outline-white dark:text-gray-400 sm:mt-7 sm:w-3/4">
+              <thead className="bg-transparent text-xs uppercase text-gray-700 dark:bg-transparent dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    Artists Results
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {artists.map((artist) => (
+                  <tr
+                    key={artist.id}
+                    className="border-b bg-white hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:cursor-pointer dark:hover:bg-gray-700"
+                    onClick={() => artistSelectedSet(artist.id)}
+                  >
+                    <th
+                      scope="row"
+                      className="whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white"
+                    >
+                      {artist.name}{" "}
+                      {artist.disambiguation && (
+                        <span className="text-gray-400">
+                          ({artist.disambiguation})
+                        </span>
+                      )}
+                    </th>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <pre>{JSON.stringify(selectedArtistAlbums, null, 4)}</pre>
       </main>
       <Footer />
     </div>
