@@ -1,7 +1,7 @@
 import { Handler, HandlerEvent, HandlerContext } from "@netlify/functions";
 import axios from "axios";
-// Get artist Albums by ID
-// Needs artist ID to get albums
+// Get Album cover by ID
+// Needs album ID to get album cover
 const handler: Handler = async (
   event: HandlerEvent,
   context: HandlerContext
@@ -10,22 +10,24 @@ const handler: Handler = async (
     return { statusCode: 405, body: "Method Not Allowed" };
   }
 
-  const artist_id = event?.queryStringParameters?.artist_id || "";
-
-  if (!artist_id) {
+  const album_id = event?.queryStringParameters?.album_id || "";
+  console.log("album_id", album_id);
+  if (!album_id) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ response: "No artist_id provided" }),
+      body: JSON.stringify({ response: "No album_id provided" }),
     };
   }
 
-  const urlServer = `https://musicbrainz.org/ws/2/release?artist=${artist_id}&inc=release-groups&status=official&type=album&limit=100&fmt=json`;
+  console.log("album_id", album_id);
+  const urlServer = `https://coverartarchive.org/release/${album_id}`;
+  console.log("urlServer", urlServer);
   const response = await axios.get(urlServer);
   const data = response.data;
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ response: data, statusCode: 200 }),
+    body: JSON.stringify({ response: { ...data, album_id }, statusCode: 200 }),
   };
 };
 

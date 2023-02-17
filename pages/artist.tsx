@@ -7,6 +7,9 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import SquigglyLines from "../components/SquigglyLines";
 import axios from "axios";
+const instance = axios.create({
+  baseURL: "/.netlify/functions",
+});
 
 const artistsReducer = (artists: object[]): Artists[] =>
   artists.slice(0, 5).map((artist: any) => ({
@@ -23,12 +26,26 @@ const artistsAlbumsReducer = (artistsAlbums: object[]): ArtistAlbum[] =>
       type: artistsAlbum["primary-type"],
       disambiguation: artistsAlbum.disambiguation,
       releaseDate:
-        artistsAlbum["date"].length < 5
+        artistsAlbum["date"] && artistsAlbum["date"].length < 5
           ? artistsAlbum["date"] + "-01-01"
           : artistsAlbum["date"],
     }))
     .slice()
     .sort((a, b) => +new Date(b.releaseDate) - +new Date(a.releaseDate));
+
+function deduplicateObjectsByTitle(arr: { title: string }[]) {
+  const uniqueObjects = [];
+  const seenTitles = new Set();
+
+  for (const obj of arr) {
+    if (!seenTitles.has(obj.title.toLocaleLowerCase())) {
+      uniqueObjects.push(obj);
+      seenTitles.add(obj.title.toLocaleLowerCase());
+    }
+  }
+
+  return uniqueObjects;
+}
 
 type Artists = {
   name: string;
@@ -68,8 +85,8 @@ export const Artist: NextPage = () => {
     const getData = async (debouncedSearchTerm: string) => {
       try {
         setLoading(true);
-        const url = "/.netlify/functions/searchArtistByQuery?query=";
-        const data = await axios.get(url + debouncedSearchTerm);
+        const url = "/searchArtistByQuery?query=";
+        const data = await instance.get(url + debouncedSearchTerm);
         setArtists(artistsReducer(data.data.response.artists));
         console.log(artists);
         toast.success("Success");
@@ -88,13 +105,12 @@ export const Artist: NextPage = () => {
     const getData = async (selectedArtist: string) => {
       try {
         setLoading(true);
-        const url = "/.netlify/functions/getArtistAlbumsById?artist_id=";
-        const data = await axios.get(url + selectedArtist);
-        console.log("data", data)
-        console.log(data.data.response["releases"]);
-        setSelectedArtistAlbums(
+        const url = "/getArtistAlbumsById?artist_id=";
+        const data = await instance.get(url + selectedArtist);
+        const albums = deduplicateObjectsByTitle(
           artistsAlbumsReducer(data.data.response["releases"])
         );
+        setSelectedArtistAlbums(albums);
       } catch (error) {
         console.log(error);
         toast.error("Error");
@@ -105,6 +121,30 @@ export const Artist: NextPage = () => {
     getData(selectedArtist);
   }, [selectedArtist]);
 
+  useEffect(() => {
+    async function getData() {
+      console.log(selectedArtistAlbums);
+      if (selectedArtistAlbums?.length === 0) return;
+      try {
+        setLoading(true);
+        const selectedArtistAlbumsIdsArr = selectedArtistAlbums.map(
+          (album) => album.id
+        );
+        let requests: any[] = [];
+        selectedArtistAlbumsIdsArr.forEach((id) => {
+          requests.push(
+            instance.get("/getArtistAlbumCoverById?album_id=" + id)
+          );
+        });
+        const data = await axios.all(requests);
+        console.log(data);
+      } catch (error) {
+      } finally {
+        setLoading(false);
+      }
+    }
+    getData();
+  }, [selectedArtistAlbums]);
   const handleChange = (artistName: string) => {
     if (artistName) setLoading(true);
 
