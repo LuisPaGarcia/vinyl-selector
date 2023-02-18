@@ -33,6 +33,16 @@ const artistsAlbumsReducer = (artistsAlbums: object[]): ArtistAlbum[] =>
     .slice()
     .sort((a, b) => +new Date(b.releaseDate) - +new Date(a.releaseDate));
 
+function mergeArraysById(arr1: any[], arr2: any[]) {
+  return arr1.map((item1) => {
+    const matchingItem = arr2.find((item2) => item1.id === item2.id);
+    if (matchingItem) {
+      return { ...item1, ...matchingItem };
+    }
+    return item1;
+  });
+}
+
 function deduplicateObjectsByTitle(arr: { title: string }[]) {
   const uniqueObjects = [];
   const seenTitles = new Set();
@@ -110,7 +120,36 @@ export const Artist: NextPage = () => {
         const albums = deduplicateObjectsByTitle(
           artistsAlbumsReducer(data.data.response["releases"])
         );
-        setSelectedArtistAlbums(albums);
+
+        const selectedArtistAlbumsIdsArr = albums.map(
+          //@ts-ignore
+          (album) => album.id
+        );
+        console.log("selectedArtistAlbumsIdsArr", selectedArtistAlbumsIdsArr);
+        let requests: any[] = [];
+        selectedArtistAlbumsIdsArr.forEach((id) => {
+          requests.push(
+            instance.get("/getArtistAlbumCoverById?album_id=" + id)
+          );
+        });
+        console.log("requests", requests);
+
+        const data2 = await Promise.all(requests);
+        const albums2 = data2.map((album) => {
+          return {
+            images:
+              album.data.response.images &&
+              album.data.response.images.length > 0
+                ? album.data.response.images[0]
+                : {},
+            id: album.data.response.album_id,
+          };
+        });
+
+        const mergedAlbums = mergeArraysById(albums, albums2);
+
+        console.log(mergedAlbums);
+        setSelectedArtistAlbums(mergedAlbums);
       } catch (error) {
         console.log(error);
         toast.error("Error");
@@ -121,30 +160,6 @@ export const Artist: NextPage = () => {
     getData(selectedArtist);
   }, [selectedArtist]);
 
-  useEffect(() => {
-    async function getData() {
-      console.log(selectedArtistAlbums);
-      if (selectedArtistAlbums?.length === 0) return;
-      try {
-        setLoading(true);
-        const selectedArtistAlbumsIdsArr = selectedArtistAlbums.map(
-          (album) => album.id
-        );
-        let requests: any[] = [];
-        selectedArtistAlbumsIdsArr.forEach((id) => {
-          requests.push(
-            instance.get("/getArtistAlbumCoverById?album_id=" + id)
-          );
-        });
-        const data = await axios.all(requests);
-        console.log(data);
-      } catch (error) {
-      } finally {
-        setLoading(false);
-      }
-    }
-    getData();
-  }, [selectedArtistAlbums]);
   const handleChange = (artistName: string) => {
     if (artistName) setLoading(true);
 
