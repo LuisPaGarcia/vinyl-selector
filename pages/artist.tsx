@@ -252,7 +252,15 @@ export const Artist: NextPage = () => {
             </table>
           </div>
         )}
-        <pre>{JSON.stringify(selectedArtistAlbums, null, 4)}</pre>
+
+        {selectedArtistAlbums.length > 0 && (
+          <div className="rounded-lg shadow-md flex flex-wrap	">
+            {selectedArtistAlbums.map((album) => (
+              <img className="" key={album?.images?.thumbnails?.['250']} alt="" src={album?.images?.thumbnails?.['250']} />
+              ))}
+          </div>
+        )}
+
       </main>
       <Footer />
     </div>
