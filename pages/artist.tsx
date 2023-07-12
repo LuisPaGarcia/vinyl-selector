@@ -82,8 +82,9 @@ export const Artist: NextPage = () => {
     searchForArtist(e.target.value);
   };
 
-  const sendRequest = function (value: string) {
+  const searchArtistByQuery = function (value: string) {
     if (!value) return;
+    setArtists([])
     const getData = async (debouncedSearchTerm: string) => {
       try {
         setLoading(true);
@@ -102,7 +103,7 @@ export const Artist: NextPage = () => {
     getData(value);
   };
 
-  const searchForArtist = useCallback(debounce(sendRequest, 400), []);
+  const searchForArtist = useCallback(debounce(searchArtistByQuery, 400), []);
 
   const artistSelectedSet = (id: string) => {
     fetchArtistAlbums(id);
@@ -110,6 +111,7 @@ export const Artist: NextPage = () => {
 
   const fetchArtistAlbums = async (selectedArtist: string) => {
     if (!selectedArtist) return;
+    setSelectedArtistAlbums([])
     const getData = async (selectedArtist: string) => {
       try {
         setLoadingAlbums(true);
