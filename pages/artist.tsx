@@ -1,12 +1,14 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast, Toaster } from "react-hot-toast";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import SquigglyLines from "../components/SquigglyLines";
 import axios from "axios";
+import debounce from "lodash/debounce";
+
 const instance = axios.create({
   baseURL: "/.netlify/functions",
 });
@@ -69,29 +71,19 @@ type ArtistAlbum = {
 };
 
 export const Artist: NextPage = () => {
-  const [artistName, artistNameSet] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingAlbums, setLoadingAlbums] = useState<boolean>(false);
   const [artists, setArtists] = useState<Artists[]>([]);
-  const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
   const [selectedArtistAlbums, setSelectedArtistAlbums] = useState<any[]>([]);
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(artistName);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  useEffect(() => {
-    const getData = setTimeout(() => {
-      setDebouncedSearchTerm(artistName);
-      setLoading(false);
-      if (!artistName) return;
-    }, 300);
+  const updateSearchTerm = (e: any) => {
+    setSearchTerm(e.target.value);
+    searchForArtist(e.target.value);
+  };
 
-    return () => clearTimeout(getData);
-  }, [artistName]);
-
-  useEffect(() => {
-    if (!debouncedSearchTerm) {
-      setArtists([]);
-      return;
-    }
-
+  const sendRequest = function (value: string) {
+    if (!value) return;
     const getData = async (debouncedSearchTerm: string) => {
       try {
         setLoading(true);
@@ -107,14 +99,20 @@ export const Artist: NextPage = () => {
         setLoading(false);
       }
     };
-    getData(debouncedSearchTerm);
-  }, [debouncedSearchTerm]);
+    getData(value);
+  };
 
-  useEffect(() => {
+  const searchForArtist = useCallback(debounce(sendRequest, 400), []);
+
+  const artistSelectedSet = (id: string) => {
+    fetchArtistAlbums(id);
+  };
+
+  const fetchArtistAlbums = async (selectedArtist: string) => {
     if (!selectedArtist) return;
     const getData = async (selectedArtist: string) => {
       try {
-        setLoading(true);
+        setLoadingAlbums(true);
         const url = "/getArtistAlbumsById?artist_id=";
         const data = await instance.get(url + selectedArtist);
         const albums = deduplicateObjectsByTitle(
@@ -154,21 +152,10 @@ export const Artist: NextPage = () => {
         console.log(error);
         toast.error("Error");
       } finally {
-        setLoading(false);
+        setLoadingAlbums(false);
       }
     };
     getData(selectedArtist);
-  }, [selectedArtist]);
-
-  const handleChange = (artistName: string) => {
-    if (artistName) setLoading(true);
-
-    artistNameSet(artistName);
-  };
-
-  const artistSelectedSet = (id: string) => {
-    console.log(id);
-    setSelectedArtist(id);
   };
 
   return (
@@ -192,8 +179,8 @@ export const Artist: NextPage = () => {
         </h1>
         <input
           type="text"
-          value={artistName}
-          onChange={(event) => handleChange(event.target.value)}
+          value={searchTerm}
+          onChange={updateSearchTerm}
           className="mx-auto mt-10 w-full rounded-lg border border-gray-500 bg-black p-3 outline-1 outline-white sm:mt-7 sm:w-3/4"
         />
 
@@ -253,14 +240,33 @@ export const Artist: NextPage = () => {
           </div>
         )}
 
+        {loadingAlbums && (
+          <button
+            className="z-10 mx-auto mt-7 w-3/4 cursor-not-allowed rounded-2xl border-gray-500 bg-green-500 p-3 text-lg font-medium transition hover:bg-green-400 sm:mt-10 sm:w-1/3"
+            disabled
+          >
+            <div className="flex items-center justify-center text-white">
+              <Image
+                src="/loading.svg"
+                alt="Loading..."
+                width={28}
+                height={28}
+              />
+            </div>
+          </button>
+        )}
         {selectedArtistAlbums.length > 0 && (
-          <div className="rounded-lg shadow-md flex flex-wrap	">
+          <div className="flex flex-wrap rounded-lg shadow-md	mx-auto mt-10 w-full rounded-lg border border-gray-500 bg-black p-3 outline-1 outline-white sm:mt-7 sm:w-3/4">
             {selectedArtistAlbums.map((album) => (
-              <img className="" key={album?.images?.thumbnails?.['250']} alt="" src={album?.images?.thumbnails?.['250']} />
-              ))}
+              <img
+                className=""
+                key={album?.images?.thumbnails?.["500"]}
+                alt=""
+                src={album?.images?.thumbnails?.["500"]}
+              />
+            ))}
           </div>
         )}
-
       </main>
       <Footer />
     </div>
